@@ -1,0 +1,12 @@
+[
+    {
+        "keys": ["ctrl+shift+l"],
+        "command": "sublime_log_show_info",
+        "caption": "Show Sublimer Log Info"
+    },
+    {
+        "keys": ["ctrl+alt+l"],
+        "command": "sublime_log",
+        "caption": "Trigger Sublimer Log"
+    }
+]
