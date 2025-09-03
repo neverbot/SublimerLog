@@ -8,11 +8,11 @@ import sublime_plugin
 import sys
 import time
 from datetime import datetime
-from typing import List
+from typing import List, Union, Optional
 
 
 # Singleton instance for SublimeLogListener
-_listener_instance: "SublimeLogListener | None" = None
+_listener_instance: Optional["SublimeLogListener"] = None
 
 
 def get_listener_instance() -> "SublimeLogListener":
@@ -31,11 +31,26 @@ class SublimeLogListener(sublime_plugin.EventListener):
 
     def __init__(self) -> None:
         self.start_time: float = time.time()
+        # Load settings and store print_timestamps option
+        settings = sublime.load_settings("sublimer-log.sublime-settings")
+        self.print_timestamps: bool = settings.get("print_timestamps", True)
 
-    def log(self, message: str) -> None:
-        """Log a message with timestamp."""
-        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
-        full_message = f"[{timestamp}] SUBLIMER-LOG: {message}"
+    def log(
+        self, message: str, print_timestamps: Optional[bool] = None
+    ) -> None:
+        """Log a message with optional timestamp."""
+        # Use instance variable if no override is provided
+        use_timestamps = (
+            self.print_timestamps
+            if print_timestamps is None
+            else print_timestamps
+        )
+
+        if use_timestamps:
+            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
+            full_message = f"[{timestamp}] Sublimer Log: {message}"
+        else:
+            full_message = f"Sublimer Log: {message}"
         print(full_message)
 
         # Also log to Sublime Text console if available
@@ -178,14 +193,16 @@ def delayed_init() -> None:
     listener = get_listener_instance()
     listener.log("Delayed initialization completed")
     listener.log("Sublimer Log is now monitoring all Sublime Text activity")
-    
+
     # Check if console should be opened on startup
     settings = sublime.load_settings("sublimer-log.sublime-settings")
     if settings.get("show_console_on_startup", False):
         listener.log("Opening console on startup as configured")
         window = sublime.active_window()
         if window:
-            window.run_command("show_panel", {"panel": "console", "toggle": True})
+            window.run_command(
+                "show_panel", {"panel": "console", "toggle": True}
+            )
 
 
 def plugin_unloaded() -> None:

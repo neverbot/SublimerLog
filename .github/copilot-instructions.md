@@ -5,11 +5,13 @@
 **Version**: Python 3.8+ (Sublime Text embedded Python)
 
 **Avoid**:
-- None (All Python 3.8 features are supported)
+- Union operator `|` for type hints (use `Union` or `Optional` from typing module)
 
 **Use**:
 - f-strings for string formatting: `f"Hello, {name}!"`
-- Type hints for better code clarity
+- Type hints for better code clarity:
+  - `Union[str, int]` instead of `str | int`
+  - `Optional[str]` instead of `str | None`
 - `pathlib` for file operations
 - Modern async/await syntax
 - Walrus operator `:=`

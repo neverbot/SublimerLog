@@ -1,4 +1,7 @@
 {
     // Sublimer Log Settings
     "show_console_on_startup": false,
+    
+    // Whether to print timestamps in log messages
+    "print_timestamps": false
 }
