@@ -5,11 +5,6 @@
         "caption": "Show Sublimer Log Info"
     },
     {
-        "keys": ["ctrl+alt+l"],
-        "command": "sublimer_log",
-        "caption": "Trigger Sublimer Log"
-    },
-    {
         "keys": ["ctrl+shift+alt+s"],
         "command": "sublimer_log_open_preferences",
         "caption": "Open Sublimer Log Preferences"

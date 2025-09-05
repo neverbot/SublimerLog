@@ -12,7 +12,6 @@ from typing import Optional
 # Import components
 from .listeners.event_listener import SublimerLogListener
 from .commands.plugin_commands import (
-    SublimerLogCommand,
     SublimerLogShowInfoCommand,
     SublimerLogOpenPreferencesCommand,
 )
@@ -56,7 +55,6 @@ __all__ = [
     "log",
     "log_system_info",
     "SublimerLogListener",
-    "SublimerLogCommand",
     "SublimerLogShowInfoCommand",
     "SublimerLogOpenPreferencesCommand",
 ]

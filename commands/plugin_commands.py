@@ -11,38 +11,6 @@ from datetime import datetime
 from ..console import log
 
 
-class SublimerLogCommand(sublime_plugin.TextCommand):
-    """Command to manually trigger logging."""
-
-    def run(self, edit: sublime.Edit) -> None:
-        log("Manual log command executed")
-
-        # Show current plugin loading order
-        self.show_plugin_order()
-
-    def show_plugin_order(self) -> None:
-        """Show the order in which plugins were loaded."""
-        log("=== PLUGIN LOADING ORDER ===")
-
-        # Get all loaded modules that might be Sublime Text plugins
-        plugin_modules = [
-            name
-            for name, module in sys.modules.items()
-            if (
-                hasattr(module, "__file__")
-                and module.__file__
-                and "Packages" in module.__file__
-                and name != "__main__"
-            )
-        ]
-
-        plugin_modules.sort()
-        for i, plugin in enumerate(plugin_modules, 1):
-            log(f"{i:3d}. {plugin}")
-
-        log("=== END PLUGIN ORDER ===")
-
-
 class SublimerLogShowInfoCommand(sublime_plugin.ApplicationCommand):
     """Command to show plugin information in a panel."""
 

@@ -1,0 +1,10 @@
+[
+    {
+        "caption": "Sublimer Log: Show Info",
+        "command": "sublimer_log_show_info"
+    },
+    {
+        "caption": "Sublimer Log: Open Preferences",
+        "command": "sublimer_log_open_preferences"
+    }
+]
