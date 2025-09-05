@@ -1,17 +1,17 @@
 [
     {
         "keys": ["ctrl+shift+l"],
-        "command": "sublime_log_show_info",
+        "command": "sublimer_log_show_info",
         "caption": "Show Sublimer Log Info"
     },
     {
         "keys": ["ctrl+alt+l"],
-        "command": "sublime_log",
+        "command": "sublimer_log",
         "caption": "Trigger Sublimer Log"
     },
     {
         "keys": ["ctrl+shift+alt+s"],
-        "command": "sublime_log_open_preferences",
+        "command": "sublimer_log_open_preferences",
         "caption": "Open Sublimer Log Preferences"
     }
 ]

@@ -25,11 +25,8 @@ _start_time: float = time.time()
 
 def plugin_loaded() -> None:
     """Called when the plugin is loaded."""
-
     global _listener_instance
-    if _listener_instance is None:
-        _listener_instance = SublimerLogListener()
-
+    _listener_instance = SublimerLogListener()
     log_system_info()
 
     # Setup console capture here
