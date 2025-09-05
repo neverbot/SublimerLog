@@ -1,0 +1,19 @@
+{
+    "pythonVersion": "3.8",
+    "pythonPlatform": "All",
+    // "reportMissingImports": "none",
+    "reportMissingModuleSource": "none",
+    "reportOptionalSubscript": "none",
+    "reportOptionalMemberAccess": "none",
+    "reportOptionalCall": "none",
+    "reportOptionalIterable": "none",
+    "reportOptionalContextManager": "none",
+    "reportOptionalOperand": "none",
+    "reportTypedDictNotRequiredAccess": "none",
+    "typeCheckingMode": "basic",
+    "reportUntypedFunctionDecorator": "none",
+    "reportUnknownParameterType": "none",
+    "reportUnknownVariableType": "none",
+    "reportUnknownMemberType": "none",
+    "reportMissingTypeStubs": "none"
+}
