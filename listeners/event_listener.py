@@ -12,6 +12,8 @@ from pathlib import Path
 from datetime import datetime
 from typing import List, Optional
 
+from ..console import ConsoleCapture
+
 
 class SublimerLogListener(sublime_plugin.EventListener):
     """Main event listener for the Sublimer Log plugin."""
@@ -51,34 +53,6 @@ class SublimerLogListener(sublime_plugin.EventListener):
 
     def _setup_console_capture(self) -> None:
         """Setup console output capture."""
-
-        class ConsoleCapture:
-            def __init__(self, original_stream, log_file_path):
-                self.original_stream = original_stream
-                self.log_file_path = log_file_path
-
-            def write(self, text):
-                # Write to original stream
-                self.original_stream.write(text)
-
-                # Write to log file
-                if text.strip():  # Only log non-empty lines
-                    try:
-                        with open(
-                            self.log_file_path, "a", encoding="utf-8"
-                        ) as f:
-                            timestamp = datetime.now().strftime(
-                                "%Y-%m-%d %H:%M:%S.%f"
-                            )[:-3]
-                            f.write(f"[{timestamp}] {text}")
-                            if not text.endswith("\n"):
-                                f.write("\n")
-                    except Exception:
-                        pass  # Silently fail to avoid recursion
-
-            def flush(self):
-                self.original_stream.flush()
-
         # Replace stdout and stderr with capturing versions
         if self.enable_file_logging and self.log_file_path:
             sys.stdout = ConsoleCapture(
@@ -105,10 +79,6 @@ class SublimerLogListener(sublime_plugin.EventListener):
         else:
             full_message = f"Sublimer Log: {message}"
         print(full_message)
-
-        # Also log to Sublime Text console if available
-        if hasattr(sublime, "log"):
-            sublime.log(full_message)
 
     def log_system_info(self) -> None:
         """Log system and Sublime Text information."""
