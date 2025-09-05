@@ -5,13 +5,17 @@
     // Whether to print timestamps in log messages
     "print_timestamps": false,
     
+    // Whether to enable file logging
+    "enable_file_logging": true,
+
     // Path to store log file (supports ~ for home directory)
     // Default: ~/sublimer-log.txt
     "log_file_path": "~/sublimer-log.txt",
     
-    // Whether to enable file logging
-    "enable_file_logging": true,
-    
+    // If true, on startup the current log file will be copied to the same filename
+    // ending in .bak (existing .bak is removed first), and a fresh log file will be used.
+    "rewrite_log_file": true,
+
     // Optional: list of package/module names to reload after Sublimer Log initializes
     // Example: ["MyPackage", "another_pkg.module"]
     "plugins_to_reload": []

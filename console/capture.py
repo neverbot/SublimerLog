@@ -35,6 +35,24 @@ class ConsoleCapture:
         log_path = settings.get("log_file_path", "~/sublimer-log.txt")
         log_file_path = Path(log_path).expanduser()
 
+        # Optionally rewrite (backup) existing log file on startup
+        rewrite = settings.get("rewrite_log_file", True)
+        if rewrite:
+            try:
+                bak = log_file_path.with_suffix(log_file_path.suffix + ".bak")
+                if bak.exists():
+                    bak.unlink()
+                if log_file_path.exists():
+                    # Copy contents to bak then remove original
+                    with open(log_file_path, "rb") as src, open(
+                        bak, "wb"
+                    ) as dst:
+                        dst.write(src.read())
+                    log_file_path.unlink()
+            except Exception:
+                # don't block setup on backup failure
+                pass
+
         try:
             # Ensure the directory exists
             log_file_path.parent.mkdir(parents=True, exist_ok=True)
