@@ -1,117 +1,89 @@
 # Sublimer Log
 
-A comprehensive logging plugin for Sublime Text that loads before all other plugins to monitor and log system activity.
+Lightweight Sublime Text plugin that initializes early and captures runtime events and console output. The project is refactored into a small, modular structure with a main entry point, an event listener, console capture, and command implementations.
+
+## Project structure (important files)
+
+Below is a compact ASCII view of the repository layout (important files only):
+
+```
+sublimer-log/
+├── SublimerLog.py                — plugin entrypoint; initializes listener, logging and console capture
+├── listeners/
+│   └── event_listener.py         — `SublimerLogListener` with `on_*` event handlers (new, load, save, close)
+├── commands/
+│   └── plugin_commands.py        — Sublime command classes (sublimer_log_show_info, sublimer_log_open_preferences)
+├── console/
+│   ├── __init__.py               — package exports for console helpers
+│   ├── capture.py                — `ConsoleCapture`: setup/cleanup and writing console output to file
+│   └── logger.py                 — `log()` and `log_system_info()` helpers
+├── Default.sublime-keymap        — bundled key bindings
+├── Default.sublime-commands      — command palette entries
+├── sublimer-log.sublime-settings — default/user-editable settings
+└── README.md                     — project documentation (this file)
+```
+
+(Only top-level and core files shown.)
 
 ## Features
 
-- **First to Load**: Uses naming convention `000_` to ensure it loads before all other plugins
-- **Comprehensive Logging**: Monitors file operations, plugin loading, and system events
-- **System Information**: Displays Sublime Text version, platform, and loaded modules
-- **Plugin Load Order**: Shows the order in which plugins were loaded
-- **Real-time Monitoring**: Logs events as they happen in Sublime Text
+- Initializes early and logs plugin startup info.
+- Captures console output to a configurable file while still printing to the original streams.
+- Logs basic file events: new, load, pre/post save, close.
+- Provides commands to inspect plugin/system info and open the plugin settings.
 
 ## Installation
 
-### Package Control (Recommended)
+Copy the repository folder into your Sublime Text `Packages` directory and restart Sublime Text. The plugin is self-contained and does not require external dependencies.
 
-1. Open Sublime Text
-2. Press `Ctrl+Shift+P` (or `Cmd+Shift+P` on macOS)
-3. Type "Package Control: Install Package"
-4. Search for "Sublimer Log"
-5. Press Enter to install
-
-### Manual Installation
-
-1. Clone this repository: `git clone https://github.com/neverbot/sublimer-log.git`
-2. Copy the entire folder to your Sublime Text Packages directory:
-   - **macOS**: `~/Library/Application Support/Sublime Text/Packages/`
-   - **Windows**: `%APPDATA%\Sublime Text\Packages\`
-   - **Linux**: `~/.config/sublime-text/Packages/`
-3. Restart Sublime Text
+Paths:
+- macOS: `~/Library/Application Support/Sublime Text/Packages/`
+- Windows: `%APPDATA%\\Sublime Text\\Packages\\`
+- Linux: `~/.config/sublime-text/Packages/`
 
 ## Usage
 
-### Commands
+### Key bindings (bundled)
 
-The plugin provides several commands accessible through the Command Palette:
+- `Ctrl+Shift+L` — Show plugin/system information (`sublimer_log_show_info`).
+- `Ctrl+Shift+Alt+S` — Open plugin preferences (`sublimer_log_open_preferences`).
 
-- **Sublimer Log: Show Plugin Information** - Shows detailed system and plugin info
-- **Sublimer Log: Show Current Log** - Displays current logging activity
-- **Sublimer Log: Show Plugin Load Order** - Shows the order plugins were loaded
+### Command Palette
 
-### Key Bindings
+Open Command Palette (`Cmd+P` / `Ctrl+Shift+P`) and run:
 
-- `Ctrl+Shift+L` - Show Plugin Information
-- `Ctrl+Alt+L` - Trigger Manual Log
+- `Sublimer Log: Show Info`
+- `Sublimer Log: Open Preferences`
 
-### Menu Access
+### Settings
 
-All commands are also available through the main menu under "Tools" → "Sublimer Log"
+Edit `sublimer-log.sublime-settings` to configure behavior. Current keys used by the code:
 
-## Configuration
+- `show_console_on_startup` (bool) — open the console automatically on plugin load.
+- `enable_file_logging` (bool) — enable writing console output to a file.
+- `log_file_path` (string) — path to the file used for logging (supports `~`).
+- `print_timestamps` (bool) — whether the `log()` helper prefixes timestamps.
 
-The plugin can be configured through `sublimer-log.sublime-settings`:
+Example:
 
 ```json
 {
-    "show_console_on_startup": true,
-    "log_level": "info",
-    "log_to_file": false,
-    "monitor_file_operations": true,
-    "monitor_plugin_loading": true,
-    "show_startup_time": true,
-    "max_log_entries": 1000
+    "show_console_on_startup": false,
+    "enable_file_logging": true,
+    "log_file_path": "~/sublimer-log.txt",
+    "print_timestamps": true
 }
 ```
 
-## What Gets Logged
+## Troubleshooting
 
-- Plugin initialization and loading order
-- File operations (new, open, save, close)
-- System information (ST version, platform, Python version)
-- Sublime Text startup time
-- Module loading information
-
-## Technical Details
-
-### Loading Order
-
-The plugin uses the filename `000_sublimer_log.py` to ensure it loads first, as Sublime Text loads plugins alphabetically.
-
-### Event Monitoring
-
-The plugin extends `sublime_plugin.EventListener` to monitor various Sublime Text events:
-
-- `on_init()` - When ST finishes loading
-- `on_new()` - New file created
-- `on_load()` - File loaded
-- `on_pre_save()` / `on_post_save()` - File save operations
-- `on_close()` - File closed
-
-## Development
-
-To contribute to this plugin:
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test with different Sublime Text versions
-5. Submit a pull request
+- If console logging is duplicating lines, ensure only one copy of the plugin is installed and `enable_file_logging` is `true` in settings. The capture class writes to both the original stream and the configured file; duplicates in file and console are expected behavior.
+- If commands do not run, verify the bundled keymap and command names match the class-to-command mapping. Command names are `sublimer_log_show_info` and `sublimer_log_open_preferences`.
 
 ## Compatibility
 
-- **Sublime Text**: 3.0+ and 4.0+
-- **Python**: 3.3+
-- **Platforms**: Windows, macOS, Linux
+- Designed for Sublime Text 3 and 4. Uses Python 3.x compatible syntax and the Sublime plugin API.
 
 ## License
 
-This project is licensed under the MIT License.
-
-## Changelog
-
-### v1.0.0
-- Initial release
-- Basic logging functionality
-- Plugin load order monitoring
-- System information display
+MIT
