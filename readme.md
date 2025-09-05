@@ -1,8 +1,20 @@
 # Sublimer Log
 
-Lightweight Sublime Text plugin that initializes early and captures runtime events and console output. The project is refactored into a small, modular structure with a main entry point, an event listener, console capture, and command implementations.
+Sublimer Log captures everything printed to the Sublime Text console (print() calls and error tracebacks) and writes it to an external file while still printing to the original console stream. Because Sublime Text does not guarantee plugin load order, Sublimer Log can force a reload of other plugins after it initializes so import-time errors and exceptions from those targets are captured and persisted to disk. This makes it easy to start Sublime Text, reproduce a bug, and have a persistent, machine-readable record of console output — useful for iterating on plugins and for AI-assisted development workflows that need access to console logs on the filesystem.
 
-## Project structure (important files)
+## Why this is useful
+
+- Ensures import-time errors and runtime tracebacks from target plugins are recorded in a log file you control.
+- Helps automated workflows and AI agents inspect console output after launching Sublime Text.
+- Saves a copy of previous logs (.bak) on startup (configurable) so you can compare or preserve earlier runs.
+
+## Typical workflow
+
+1. Install Sublimer Log in your `Packages/` directory so it loads early.
+2. Configure `sublimer-log.sublime-settings` and set `plugins_to_reload` to the package/module you want monitored.
+3. On startup Sublimer Log will enable file logging and, if requested, force-reload the specified plugins so any import-time errors get written to the configured log file.
+
+## Project structure
 
 Below is a compact ASCII view of the repository layout (important files only):
 
@@ -10,17 +22,22 @@ Below is a compact ASCII view of the repository layout (important files only):
 sublimer-log/
 ├── SublimerLog.py                — plugin entrypoint; initializes listener, logging and console capture
 ├── listeners/
+│   ├── __init__.py               — package exports for event listeners
 │   └── event_listener.py         — `SublimerLogListener` with `on_*` event handlers (new, load, save, close)
 ├── commands/
+│   ├── __init__.py               — package exports for command classes
 │   └── plugin_commands.py        — Sublime command classes (sublimer_log_show_info, sublimer_log_open_preferences)
 ├── console/
 │   ├── __init__.py               — package exports for console helpers
 │   ├── capture.py                — `ConsoleCapture`: setup/cleanup and writing console output to file
 │   └── logger.py                 — `log()` and `log_system_info()` helpers
+├── reloader/
+│   └── reloader.py               — plugin reloader module for forcing plugin reloads after initialization
 ├── Default.sublime-keymap        — bundled key bindings
 ├── Default.sublime-commands      — command palette entries
+├── Main.sublime-menu             — main menu entries
 ├── sublimer-log.sublime-settings — default/user-editable settings
-└── README.md                     — project documentation (this file)
+└── readme.md                     — project documentation (this file)
 ```
 
 (Only top-level and core files shown.)
@@ -63,6 +80,8 @@ Edit `sublimer-log.sublime-settings` to configure behavior. Current keys used by
 - `enable_file_logging` (bool) — enable writing console output to a file.
 - `log_file_path` (string) — path to the file used for logging (supports `~`).
 - `print_timestamps` (bool) — whether the `log()` helper prefixes timestamps.
+- `rewrite_log_file_path` (bool) — if true (default) Sublimer Log will copy the existing log file to the same filename ending in `.bak` (removing an existing `.bak` first) and start with a fresh log file on startup.
+- `plugins_to_reload` (list) — list of package/module names that Sublimer Log will attempt to reload after it initializes. Use this to force the target plugin to be reloaded under the file-logging context so any import-time errors get written to the log file.
 
 Example:
 
@@ -71,7 +90,9 @@ Example:
     "show_console_on_startup": false,
     "enable_file_logging": true,
     "log_file_path": "~/sublimer-log.txt",
-    "print_timestamps": true
+    "print_timestamps": true,
+    "rewrite_log_file_path": true,
+    "plugins_to_reload": ["MyPackage", "another_pkg.module"]
 }
 ```
 
@@ -82,8 +103,4 @@ Example:
 
 ## Compatibility
 
-- Designed for Sublime Text 3 and 4. Uses Python 3.x compatible syntax and the Sublime plugin API.
-
-## License
-
-MIT
+- Designed for Sublime Text 4. Uses Python 3.8 compatible syntax and the Sublime plugin API.
