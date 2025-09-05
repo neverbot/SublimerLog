@@ -3,5 +3,12 @@
     "show_console_on_startup": false,
     
     // Whether to print timestamps in log messages
-    "print_timestamps": false
+    "print_timestamps": false,
+    
+    // Path to store log file (supports ~ for home directory)
+    // Default: ~/sublimer-log.txt
+    "log_file_path": "~/sublimer-log.txt",
+    
+    // Whether to enable file logging
+    "enable_file_logging": true
 }

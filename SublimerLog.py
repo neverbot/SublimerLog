@@ -50,6 +50,7 @@ def plugin_unloaded() -> None:
     """Called when the plugin is unloaded."""
     listener = get_listener_instance()
     listener.log("Sublimer Log plugin is being unloaded")
+    listener.cleanup()  # Restore original stdout/stderr
 
 
 # Re-export for Sublime Text to find them

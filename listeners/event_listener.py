@@ -7,6 +7,8 @@ import sublime  # type: ignore
 import sublime_plugin  # type: ignore
 import sys
 import time
+import os
+from pathlib import Path
 from datetime import datetime
 from typing import List, Optional
 
@@ -16,9 +18,75 @@ class SublimerLogListener(sublime_plugin.EventListener):
 
     def __init__(self) -> None:
         self.start_time: float = time.time()
-        # Load settings and store print_timestamps option
+        # Load settings
         settings = sublime.load_settings("sublimer-log.sublime-settings")
         self.print_timestamps: bool = settings.get("print_timestamps", True)
+        self.enable_file_logging: bool = settings.get(
+            "enable_file_logging", True
+        )
+
+        # Setup file logging
+        if self.enable_file_logging:
+            log_path = settings.get("log_file_path", "~/sublimer-log.txt")
+            self.log_file_path = Path(log_path).expanduser()
+            self._setup_file_logging()
+        else:
+            self.log_file_path = None
+
+    def _setup_file_logging(self) -> None:
+        """Setup file logging and capture console output."""
+        try:
+            # Ensure the directory exists
+            self.log_file_path.parent.mkdir(parents=True, exist_ok=True)
+
+            # Store original stdout/stderr for restoration
+            self.original_stdout = sys.stdout
+            self.original_stderr = sys.stderr
+
+            # Create a custom writer that captures console output
+            self._setup_console_capture()
+        except Exception as e:
+            print(f"Sublimer Log: Failed to setup file logging: {e}")
+            self.enable_file_logging = False
+
+    def _setup_console_capture(self) -> None:
+        """Setup console output capture."""
+
+        class ConsoleCapture:
+            def __init__(self, original_stream, log_file_path):
+                self.original_stream = original_stream
+                self.log_file_path = log_file_path
+
+            def write(self, text):
+                # Write to original stream
+                self.original_stream.write(text)
+
+                # Write to log file
+                if text.strip():  # Only log non-empty lines
+                    try:
+                        with open(
+                            self.log_file_path, "a", encoding="utf-8"
+                        ) as f:
+                            timestamp = datetime.now().strftime(
+                                "%Y-%m-%d %H:%M:%S.%f"
+                            )[:-3]
+                            f.write(f"[{timestamp}] {text}")
+                            if not text.endswith("\n"):
+                                f.write("\n")
+                    except Exception:
+                        pass  # Silently fail to avoid recursion
+
+            def flush(self):
+                self.original_stream.flush()
+
+        # Replace stdout and stderr with capturing versions
+        if self.enable_file_logging and self.log_file_path:
+            sys.stdout = ConsoleCapture(
+                self.original_stdout, self.log_file_path
+            )
+            sys.stderr = ConsoleCapture(
+                self.original_stderr, self.log_file_path
+            )
 
     def log(
         self, message: str, print_timestamps: Optional[bool] = None
@@ -73,3 +141,11 @@ class SublimerLogListener(sublime_plugin.EventListener):
     def on_close(self, view: sublime.View) -> None:
         """Called when a file is closed."""
         self.log(f"File closed: {view.file_name() or 'Untitled'}")
+
+    def cleanup(self) -> None:
+        """Cleanup method to restore original streams."""
+        if hasattr(self, "original_stdout") and hasattr(
+            self, "original_stderr"
+        ):
+            sys.stdout = self.original_stdout
+            sys.stderr = self.original_stderr
