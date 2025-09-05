@@ -10,5 +10,9 @@
     "log_file_path": "~/sublimer-log.txt",
     
     // Whether to enable file logging
-    "enable_file_logging": true
+    "enable_file_logging": true,
+    
+    // Optional: list of package/module names to reload after Sublimer Log initializes
+    // Example: ["MyPackage", "another_pkg.module"]
+    "plugins_to_reload": []
 }
