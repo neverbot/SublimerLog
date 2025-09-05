@@ -7,42 +7,22 @@ import sublime  # type: ignore
 import sublime_plugin  # type: ignore
 import sys
 from datetime import datetime
-from typing import TYPE_CHECKING
 
-if TYPE_CHECKING:
-    from ..listeners.event_listener import SublimerLogListener
-
-# This will be set by the main plugin
-_get_listener_instance = None
-
-
-def set_listener_getter(getter_func):
-    """Set the function to get the listener instance."""
-    global _get_listener_instance
-    _get_listener_instance = getter_func
-
-
-def get_listener_instance() -> "SublimerLogListener":
-    """Get the listener instance via the main plugin."""
-    if _get_listener_instance is None:
-        raise RuntimeError("Listener getter not set")
-    return _get_listener_instance()
+from ..console import log
 
 
 class SublimerLogCommand(sublime_plugin.TextCommand):
     """Command to manually trigger logging."""
 
     def run(self, edit: sublime.Edit) -> None:
-        listener = get_listener_instance()
-        listener.log("Manual log command executed")
+        log("Manual log command executed")
 
         # Show current plugin loading order
         self.show_plugin_order()
 
     def show_plugin_order(self) -> None:
         """Show the order in which plugins were loaded."""
-        listener = get_listener_instance()
-        listener.log("=== PLUGIN LOADING ORDER ===")
+        log("=== PLUGIN LOADING ORDER ===")
 
         # Get all loaded modules that might be Sublime Text plugins
         plugin_modules = [
@@ -58,9 +38,9 @@ class SublimerLogCommand(sublime_plugin.TextCommand):
 
         plugin_modules.sort()
         for i, plugin in enumerate(plugin_modules, 1):
-            listener.log(f"{i:3d}. {plugin}")
+            log(f"{i:3d}. {plugin}")
 
-        listener.log("=== END PLUGIN ORDER ===")
+        log("=== END PLUGIN ORDER ===")
 
 
 class SublimerLogShowInfoCommand(sublime_plugin.ApplicationCommand):
