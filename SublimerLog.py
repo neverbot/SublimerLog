@@ -26,11 +26,11 @@ def plugin_loaded() -> None:
     """Called when the plugin is loaded."""
     global _listener_instance
     _listener_instance = SublimerLogListener()
-    log_system_info()
 
     # Setup console capture here
     ConsoleCapture.setup_console_capture()
 
+    log_system_info()
     # Optionally reload other plugins listed in settings (non-fatal)
     try:
         from .reloader.reloader import reload_from_settings
