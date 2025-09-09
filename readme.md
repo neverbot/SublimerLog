@@ -11,7 +11,7 @@ Sublimer Log captures everything printed to the Sublime Text console (print() ca
 ## Typical workflow
 
 1. Install Sublimer Log in your `Packages/` directory so it loads early.
-2. Configure `sublimer-log.sublime-settings` and set `plugins_to_reload` to the package/module you want monitored.
+2. Configure `SublimerlLog.sublime-settings` and set `plugins_to_reload` to the package/module you want monitored.
 3. On startup Sublimer Log will enable file logging and, if requested, force-reload the specified plugins so any import-time errors get written to the configured log file.
 
 ## Project structure
@@ -19,7 +19,7 @@ Sublimer Log captures everything printed to the Sublime Text console (print() ca
 Below is a compact ASCII view of the repository layout (important files only):
 
 ```
-sublimer-log/
+SublimerLog/
 ├── SublimerLog.py                — plugin entrypoint; initializes listener, logging and console capture
 ├── listeners/
 │   ├── __init__.py               — package exports for event listeners
@@ -36,7 +36,7 @@ sublimer-log/
 ├── Default.sublime-keymap        — bundled key bindings
 ├── Default.sublime-commands      — command palette entries
 ├── Main.sublime-menu             — main menu entries
-├── sublimer-log.sublime-settings — default/user-editable settings
+├── SublimerlLog.sublime-settings — default/user-editable settings
 └── readme.md                     — project documentation (this file)
 ```
 
@@ -74,7 +74,7 @@ Open Command Palette (`Cmd+P` / `Ctrl+Shift+P`) and run:
 
 ### Settings
 
-Edit `sublimer-log.sublime-settings` to configure behavior. Current keys used by the code:
+Edit `SublimerlLog.sublime-settings` to configure behavior. Current keys used by the code:
 
 - `show_console_on_startup` (bool) — open the console automatically on plugin load.
 - `enable_file_logging` (bool) — enable writing console output to a file.
@@ -89,7 +89,7 @@ Example:
 {
     "show_console_on_startup": false,
     "enable_file_logging": true,
-    "log_file_path": "~/sublimer-log.txt",
+    "log_file_path": "~/.sublimer-log.txt",
     "print_timestamps": true,
     "rewrite_log_file_path": true,
     "plugins_to_reload": ["MyPackage", "another_pkg.module"]

@@ -9,8 +9,8 @@
     "enable_file_logging": true,
 
     // Path to store log file (supports ~ for home directory)
-    // Default: ~/sublimer-log.txt
-    "log_file_path": "~/sublimer-log.txt",
+    // Default: ~/.sublimer-log.txt
+    "log_file_path": "~/.sublimer-log.txt",
     
     // If true, on startup the current log file will be copied to the same filename
     // ending in .bak (existing .bak is removed first), and a fresh log file will be used.

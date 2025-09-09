@@ -1,6 +1,6 @@
 """
 Simple plugin reloader for Sublimer Log
-Reads a list named `plugins_to_reload` from `sublimer-log.sublime-settings` and attempts
+Reads a list named `plugins_to_reload` from `SublimerLog.sublime-settings` and attempts
 to reload matching modules/packages via `sublime_plugin.reload_plugin`.
 
 This implementation is lightweight and avoids complex filesystem scanning. It will try
@@ -310,12 +310,12 @@ def reload_plugins(plugin_names: List[str], quiet: bool = False) -> None:
 
 
 def reload_from_settings(
-    settings_name: str = "sublimer-log.sublime-settings",
+    settings_name: str = "SublimerLog.sublime-settings",
     key: str = "plugins_to_reload",
 ) -> None:
     """Read the settings file and reload plugins listed under `key`.
 
-    Example setting in `sublimer-log.sublime-settings`:
+    Example setting in `SublimerLog.sublime-settings`:
     {
         "plugins_to_reload": ["MyPackage", "another_package.module"]
     }

@@ -68,11 +68,11 @@ class SublimerLogOpenPreferencesCommand(sublime_plugin.ApplicationCommand):
     """Command to open Sublimer Log preferences."""
 
     def run(self):
-        """Open the Sublimer Log settings in split view."""
+        """Open the Sublime rLog settings in split view."""
         sublime.run_command(
             "edit_settings",
             {
-                "base_file": "${packages}/Sublimer Log/sublimer-log.sublime-settings",
+                "base_file": "${packages}/SublimerLog/SublimerLog.sublime-settings",
                 "default": "{\n\t// Sublimer Log Settings\n\t$0\n}\n",
             },
         )

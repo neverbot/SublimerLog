@@ -31,16 +31,17 @@ def plugin_loaded() -> None:
     ConsoleCapture.setup_console_capture()
 
     log_system_info()
+
     # Optionally reload other plugins listed in settings (non-fatal)
     try:
         from .reloader.reloader import reload_from_settings
 
         reload_from_settings()
     except Exception:
-        log("Sublimer Log: No reloader available or reload failed")
+        log("No reloader available or reload failed")
 
     # Check if console should be opened on startup
-    settings = sublime.load_settings("sublimer-log.sublime-settings")
+    settings = sublime.load_settings("SublimerLog.sublime-settings")
     if settings.get("show_console_on_startup", False):
         log("Opening console on startup")
         window = sublime.active_window()

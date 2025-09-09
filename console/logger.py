@@ -18,7 +18,7 @@ def log(message: str, print_timestamps: Optional[bool] = None) -> None:
 
     # Initialize settings on first use
     if _print_timestamps is None:
-        settings = sublime.load_settings("sublimer-log.sublime-settings")
+        settings = sublime.load_settings("SublimerLog.sublime-settings")
         _print_timestamps = settings.get("print_timestamps", True)
 
     # Use global setting if no override is provided

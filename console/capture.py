@@ -26,13 +26,13 @@ class ConsoleCapture:
         if cls._setup_complete:
             return True
 
-        settings = sublime.load_settings("sublimer-log.sublime-settings")
+        settings = sublime.load_settings("SublimerLog.sublime-settings")
         enable_file_logging = settings.get("enable_file_logging", True)
 
         if not enable_file_logging:
             return False
 
-        log_path = settings.get("log_file_path", "~/sublimer-log.txt")
+        log_path = settings.get("log_file_path", "~/.sublimer-log.txt")
         log_file_path = Path(log_path).expanduser()
 
         # Optionally rewrite (backup) existing log file on startup
