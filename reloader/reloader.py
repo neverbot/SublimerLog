@@ -327,10 +327,12 @@ def reload_from_settings(
             log(f"'{key}' must be a list in {settings_name}")
             return
         if not entries:
-            # log(
-            #     f"No plugins to reload (settings key '{key}' is empty)"
-            # )
             return
+
+        # Log each plugin that will be force reloaded
+        for entry in entries:
+            log(f"Forcing reload of plugin: {entry}")
+
         reload_plugins(entries, True)
     except Exception as e:
         log(f"Failed to reload plugins from settings: {e}")
